@@ -88,8 +88,9 @@ online-error-fix/
 │   ├── __init__.py       # Python 包初始化
 │   └── main.py           # 主应用程序
 ├── Dockerfile            # Docker 镜像构建文件
-├── Jenkinsfile           # Jenkins CI/CD 流水线配置（GitHub 版本）
-├── JENKINS_SETUP.md      # Jenkins 详细配置指南
+├── Jenkinsfile           # CI/CD 流水线配置（支持 KubeSphere/Jenkins）
+├── KUBESPHERE_SETUP.md   # KubeSphere 流水线配置指南（推荐）
+├── JENKINS_SETUP.md      # 传统 Jenkins 配置指南
 ├── requirements.txt      # Python 依赖
 ├── docker-compose.yml    # Docker Compose 配置
 ├── quick-start.sh        # 快速启动脚本
@@ -117,7 +118,22 @@ git push -u origin main
 
 ## 部署流程
 
-### Jenkins 流水线
+### 方式 1: KubeSphere 流水线（推荐）
+
+详细配置请参考：[KUBESPHERE_SETUP.md](KUBESPHERE_SETUP.md)
+
+**快速步骤：**
+
+1. **登录 KubeSphere** → 进入 DevOps 项目
+2. **创建流水线** → 选择 "使用 Jenkinsfile 创建流水线"
+3. **配置 GitHub 仓库**:
+   - 仓库地址: `https://github.com/ly2833200-max/online-error-fix.git`
+   - 凭据: 添加 GitHub Token（ID: `github-token`）
+   - Jenkinsfile 路径: `Jenkinsfile`
+4. **添加参数**: `Branch`（默认 `main`）
+5. **保存并运行**
+
+### 方式 2: 传统 Jenkins
 
 详细配置请参考：[JENKINS_SETUP.md](JENKINS_SETUP.md)
 
@@ -153,7 +169,7 @@ Docker 容器内置健康检查机制:
 - **Web 框架**: FastAPI
 - **ASGI 服务器**: Uvicorn
 - **容器化**: Docker
-- **CI/CD**: Jenkins
+- **CI/CD**: KubeSphere / Jenkins
 
 ## 开发说明
 

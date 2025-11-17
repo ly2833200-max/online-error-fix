@@ -7,7 +7,8 @@
 - **项目**: Online Error Fix Service
 - **GitHub 用户**: ly2833200-max
 - **GitHub 仓库**: https://github.com/ly2833200-max/online-error-fix
-- **技术栈**: Python 3.10.9 + FastAPI + Docker + Jenkins
+- **技术栈**: Python 3.10.9 + FastAPI + Docker + KubeSphere/Jenkins
+- **部署方式**: KubeSphere 流水线（推荐）或传统 Jenkins
 
 ## ✅ 完成情况
 
@@ -25,7 +26,7 @@
 
 - ⏳ 在 GitHub 上创建仓库
 - ⏳ 推送代码到 GitHub
-- ⏳ 配置 Jenkins 流水线
+- ⏳ 配置 KubeSphere/Jenkins 流水线
 
 ## 🎯 三步走战略
 
@@ -65,7 +66,53 @@ cd /Users/yanglei/baichuan/kuaiwenkuaida/online-error-fix
 
 ---
 
-### 第 3 步: 配置 Jenkins 流水线 (5 分钟)
+### 第 3 步: 配置 KubeSphere 流水线 (5 分钟) 【推荐】
+
+#### 3.1 登录 KubeSphere 并创建流水线
+
+1. 登录 KubeSphere 控制台
+2. 进入 **DevOps 项目** → **流水线** → **创建**
+3. 选择 **使用 Jenkinsfile 创建流水线**
+
+#### 3.2 配置基本信息
+
+- **名称**: `online-error-fix`
+- **描述**: `Online Error Fix Service`
+- **代码仓库**: `GitHub`
+
+#### 3.3 配置 GitHub 凭据和仓库
+
+1. 添加 GitHub 凭据（如果还没有）：
+   - 凭据 ID: `github-token`
+   - 类型: 用户名和密码
+   - 用户名: `ly2833200-max`
+   - 密码: 你的 GitHub Token
+2. 配置仓库：
+   - URL: `https://github.com/ly2833200-max/online-error-fix.git`
+   - 凭据: `github-token`
+   - 分支: `main`
+
+#### 3.4 配置 Jenkinsfile
+
+- **Jenkinsfile 路径**: `Jenkinsfile`（默认）
+
+#### 3.5 添加构建参数
+
+- 参数名: `Branch`
+- 参数类型: 字符串
+- 默认值: `main`
+
+#### 3.6 保存并运行
+
+1. 点击 **创建**
+2. 点击 **运行** → 选择分支 `main`
+3. 自动部署到 **Test 环境**
+
+**详细文档**: [KUBESPHERE_SETUP.md](KUBESPHERE_SETUP.md)
+
+---
+
+### 备选方案: 传统 Jenkins 流水线
 
 #### 3.1 在 Jenkins 中添加 GitHub Token 凭据
 
@@ -160,7 +207,8 @@ docker-compose down
 |------|------|
 | [README.md](README.md) | 项目总体说明 |
 | [GITHUB_SETUP.md](GITHUB_SETUP.md) | GitHub 仓库创建详细步骤 |
-| [JENKINS_SETUP.md](JENKINS_SETUP.md) | Jenkins 流水线配置详细步骤 |
+| [KUBESPHERE_SETUP.md](KUBESPHERE_SETUP.md) | **KubeSphere 流水线配置（推荐）** |
+| [JENKINS_SETUP.md](JENKINS_SETUP.md) | 传统 Jenkins 流水线配置 |
 | [QUICKSTART_GUIDE.md](QUICKSTART_GUIDE.md) | 本文档 - 快速开始 |
 
 ---
