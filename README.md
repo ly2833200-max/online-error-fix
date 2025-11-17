@@ -2,6 +2,11 @@
 
 一个简单的 Python HTTP 服务，用于在线错误修复功能。
 
+[![GitHub](https://img.shields.io/badge/github-ly2833200--max-blue)](https://github.com/ly2833200-max/online-error-fix)
+[![Python](https://img.shields.io/badge/python-3.10.9-blue)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.116.2-green)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/docker-ready-blue)](https://www.docker.com/)
+
 ## 功能特性
 
 - ✅ FastAPI 框架
@@ -9,6 +14,7 @@
 - ✅ 健康检查接口
 - ✅ Docker 容器化支持
 - ✅ Jenkins CI/CD 流水线
+- ✅ GitHub 集成
 
 ## 快速开始
 
@@ -79,26 +85,54 @@ GET /api/version
 ```
 online-error-fix/
 ├── src/
+│   ├── __init__.py       # Python 包初始化
 │   └── main.py           # 主应用程序
 ├── Dockerfile            # Docker 镜像构建文件
-├── Jenkinsfile           # Jenkins CI/CD 流水线配置
+├── Jenkinsfile           # Jenkins CI/CD 流水线配置（GitHub 版本）
+├── JENKINS_SETUP.md      # Jenkins 详细配置指南
 ├── requirements.txt      # Python 依赖
+├── docker-compose.yml    # Docker Compose 配置
+├── quick-start.sh        # 快速启动脚本
+├── test_service.sh       # 服务测试脚本
+├── push-to-github.sh     # GitHub 推送脚本
 ├── .gitignore           # Git 忽略文件
 └── README.md            # 项目说明文档
+```
+
+## GitHub 仓库
+
+**仓库地址**: https://github.com/ly2833200-max/online-error-fix
+
+### 推送代码到 GitHub
+
+```bash
+# 方法 1: 使用推送脚本（推荐）
+./push-to-github.sh
+
+# 方法 2: 手动推送
+git push -u origin main
+# 用户名: ly2833200-max
+# 密码: 使用 Personal Access Token
 ```
 
 ## 部署流程
 
 ### Jenkins 流水线
 
+详细配置请参考：[JENKINS_SETUP.md](JENKINS_SETUP.md)
+
+**快速步骤：**
+
 1. **在 Jenkins 中创建流水线任务**
-2. **配置流水线参数:**
+2. **配置 GitHub Token 凭据**（ID 必须为 `github-token`）
+3. **配置流水线参数:**
    - `Branch`: 代码分支（如 `main`, `develop`）
    - `DeployType`: 部署环境（`dev`, `test`, `prod`）
-3. **选择 "Pipeline script from SCM"**
-4. **填写 Git 仓库地址**
-5. **Script Path 填写: `Jenkinsfile`**
-6. **保存并构建**
+4. **选择 "Pipeline script from SCM"**
+5. **填写 Git 仓库地址**: `https://github.com/ly2833200-max/online-error-fix.git`
+6. **Credentials 选择**: `github-token`
+7. **Script Path 填写**: `Jenkinsfile`
+8. **保存并构建**
 
 ### 部署环境
 

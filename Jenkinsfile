@@ -12,8 +12,8 @@ pipeline {
         container('devops-base') {
           dir('service-code') {
             git(
-              url: 'ssh://git@code.baichuan-inc.com:2224/baichuan-commerce/online-error-fix.git',
-              credentialsId: 'gitlab-private-sshkey',
+              url: 'https://github.com/ly2833200-max/online-error-fix.git',
+              credentialsId: 'github-token',
               branch: '$Branch',
               changelog: true,
               poll: false
