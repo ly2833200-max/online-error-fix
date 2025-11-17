@@ -59,5 +59,7 @@ async def version():
 if __name__ == "__main__":
     import uvicorn
     logger.info("启动 Online Error Fix 服务: 0.0.0.0:8000")
+    # 故意制造错误
+    raise RuntimeError("这是一个故意的错误，用于测试!")
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
