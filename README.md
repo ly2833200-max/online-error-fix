@@ -127,18 +127,17 @@ git push -u origin main
 2. **配置 GitHub Token 凭据**（ID 必须为 `github-token`）
 3. **配置流水线参数:**
    - `Branch`: 代码分支（如 `main`, `develop`）
-   - `DeployType`: 部署环境（`dev`, `test`, `prod`）
 4. **选择 "Pipeline script from SCM"**
 5. **填写 Git 仓库地址**: `https://github.com/ly2833200-max/online-error-fix.git`
 6. **Credentials 选择**: `github-token`
 7. **Script Path 填写**: `Jenkinsfile`
 8. **保存并构建**
 
+> 💡 **注意**: 流水线已简化，仅部署到 **Test 环境**
+
 ### 部署环境
 
-- **Dev**: 开发环境
-- **Test**: 测试环境
-- **Prod**: 生产环境
+- **Test**: 测试环境（默认且唯一）
 
 ## 健康检查
 

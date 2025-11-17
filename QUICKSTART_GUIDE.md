@@ -91,13 +91,11 @@ cd /Users/yanglei/baichuan/kuaiwenkuaida/online-error-fix
 
 在 **General** 部分，勾选 **"This project is parameterized"**，添加：
 
-**参数 1: Branch**
+**Branch 参数**
 - Name: `Branch`
 - Default: `main`
 
-**参数 2: DeployType**
-- Name: `DeployType`
-- Choices: `dev`, `test`, `prod`
+> 💡 流水线已简化，固定部署到 Test 环境
 
 #### 3.4 配置 Pipeline
 
@@ -116,8 +114,9 @@ cd /Users/yanglei/baichuan/kuaiwenkuaida/online-error-fix
 2. 点击 **Build with Parameters**
 3. 选择:
    - Branch: `main`
-   - DeployType: `dev`（建议先测试 dev 环境）
 4. 点击 **Build**
+
+自动部署到 **Test 环境**
 
 **详细说明**: [JENKINS_SETUP.md](JENKINS_SETUP.md)
 

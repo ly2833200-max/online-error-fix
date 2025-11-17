@@ -46,15 +46,13 @@ git config --global --add safe.directory $location'''
               script {
                 try {
                   sh '''
-echo "🔨 开始构建 Online Error Fix 镜像 [环境: ${DeployType}]..."
-DockerfileName="Dockerfile"
-
+echo "🔨 开始构建 Online Error Fix 镜像..."
 docker build \
-  --build-arg ENV=${DeployType} \
-  -f $DockerfileName \
+  --build-arg ENV=test \
+  -f Dockerfile \
   -t $CrRegistry/$Workspace/$AppId:v${BUILD_NUMBER}-${CURE_DATE}-${GIT_COMMIT_ID} .
 
-echo "✅ 镜像构建成功 [ENV=${DeployType}]"
+echo "✅ 镜像构建成功"
 '''
                 } catch (Exception e) {
                   sh '''
@@ -77,81 +75,8 @@ echo "✅ 镜像推送成功: $CrRegistry/$Workspace/$AppId:v${BUILD_NUMBER}-${C
       }
     }
 
-    stage('Deploy') {
-      parallel {
-        stage('Deploy to Test') {
-          agent none
-          when {
-            environment name: 'DeployType', value: 'test'
-          }
-          steps {
-            container('devops-base') {
-              dir('cicd-code') {
-                git(
-                  url: 'ssh://git@code.baichuan-inc.com:2224/wujincheng/jenkins-cicd-filxe.git',
-                  credentialsId: 'gitlab-private-sshkey',
-                  branch: 'main',
-                  changelog: true,
-                  poll: false
-                )
-                withCredentials([kubeconfigContent(
-                  credentialsId: 'k8s-test-kubeconfig',
-                  variable: 'KubeconfigContent'
-                )]) {
-                  sh '''
-echo "🚀 部署 Online Error Fix 到 Test 环境..."
-export ClusterName="ack-beijing-test"
-export searchPath=""
-export AppPort="8000"
-sh ./kubesphere-cd.sh
-echo "✅ 部署到 Test 环境成功"
-'''
-                }
-              }
-            }
-          }
-        }
-
-        stage('Deploy to Dev') {
-          agent none
-          when {
-            environment name: 'DeployType', value: 'dev'
-          }
-          steps {
-            container('devops-base') {
-              dir('cicd-code') {
-                git(
-                  url: 'ssh://git@code.baichuan-inc.com:2224/wujincheng/jenkins-cicd-filxe.git',
-                  credentialsId: 'gitlab-private-sshkey',
-                  branch: 'main',
-                  changelog: true,
-                  poll: false
-                )
-                withCredentials([kubeconfigContent(
-                  credentialsId: 'k8s-dev-kubeconfig',
-                  variable: 'KubeconfigContent'
-                )]) {
-                  sh '''
-echo "🚀 部署 Online Error Fix 到 Dev 环境..."
-export ClusterName="ack-beijing-test"
-export searchPath=""
-export AppPort="8000"
-sh ./kubesphere-cd.sh
-echo "✅ 部署到 Dev 环境成功"
-'''
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    stage('Deploy to Prod') {
+    stage('Deploy to Test') {
       agent none
-      when {
-        environment name: 'DeployType', value: 'prod'
-      }
       steps {
         container('devops-base') {
           dir('cicd-code') {
@@ -163,16 +88,16 @@ echo "✅ 部署到 Dev 环境成功"
               poll: false
             )
             withCredentials([kubeconfigContent(
-              credentialsId: 'k8s-prod-kubeconfig',
+              credentialsId: 'k8s-test-kubeconfig',
               variable: 'KubeconfigContent'
             )]) {
               sh '''
-echo "🚀 部署 Online Error Fix 到 Prod 环境..."
-export LogTTL="90"
-export ClusterName="ack-beijing-prod"
+echo "🚀 部署 Online Error Fix 到 Test 环境..."
+export ClusterName="ack-beijing-test"
+export searchPath=""
 export AppPort="8000"
 sh ./kubesphere-cd.sh
-echo "✅ 部署到 Prod 环境成功"
+echo "✅ 部署到 Test 环境成功"
 '''
             }
           }
@@ -186,7 +111,7 @@ echo "✅ 部署到 Prod 环境成功"
         container('devops-base') {
           script {
             sh '''
-messageBody='✅ Online Error Fix 部署成功\\n\\n📋 部署信息:\\n- 环境: '"$DeployType"'\\n- 分支: '"$Branch"'\\n- 版本: v${BUILD_NUMBER}-${CURE_DATE}-${GIT_COMMIT_ID}\\n- Commit: '"${GIT_COMMIT_MSG}"'\\n\\n📦 镜像: '"${CrRegistry}/${Workspace}/${AppId}:v${BUILD_NUMBER}-${CURE_DATE}-${GIT_COMMIT_ID}"'\\n\\n🏥 健康检查: /health'
+messageBody='✅ Online Error Fix 部署成功\\n\\n📋 部署信息:\\n- 环境: Test\\n- 分支: '"$Branch"'\\n- 版本: v${BUILD_NUMBER}-${CURE_DATE}-${GIT_COMMIT_ID}\\n- Commit: '"${GIT_COMMIT_MSG}"'\\n\\n📦 镜像: '"${CrRegistry}/${Workspace}/${AppId}:v${BUILD_NUMBER}-${CURE_DATE}-${GIT_COMMIT_ID}"'\\n\\n🏥 健康检查: /health'
 
 BuildTriggerBy=$(curl -k -u admin:P@88w0rd --silent ${BUILD_URL}api/xml | tr '<' '\n' | egrep '^userId>|^userName>' | sed 's/.*>//g' | sed -e '1s#$# /#g' | tr '\n' ' '| tr -s '/' | cut -d'/' -f2 | sed -e 's/^ *//' -e 's/ *$//')
 
@@ -219,4 +144,3 @@ curl -s -i -X POST -H "'Content-type':'application/json'" -d "$body" http://tell
     LogTTL = '7'
   }
 }
-

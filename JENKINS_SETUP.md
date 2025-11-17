@@ -52,22 +52,14 @@ git(
 在 **General** 部分：
 
 1. 勾选 **This project is parameterized**
-2. 添加两个参数：
+2. 添加参数：
 
-#### 参数 1: Branch（字符串参数）
+#### Branch（字符串参数）
 - **Name**: `Branch`
 - **Default Value**: `main`
 - **Description**: `Git 分支名称`
 
-#### 参数 2: DeployType（选项参数）
-- **Name**: `DeployType`
-- **Choices**:
-  ```
-  dev
-  test
-  prod
-  ```
-- **Description**: `部署环境选择`
+> 💡 **说明**: 流水线已简化，固定部署到 Test 环境，无需 DeployType 参数
 
 ### 配置 Pipeline
 
@@ -93,8 +85,7 @@ git(
 
 1. **aliyun-harbor-username** - 阿里云镜像仓库用户名和密码
 2. **k8s-test-kubeconfig** - Kubernetes Test 环境配置
-3. **k8s-dev-kubeconfig** - Kubernetes Dev 环境配置  
-4. **k8s-prod-kubeconfig** - Kubernetes Prod 环境配置
+3. **gitlab-private-sshkey** - 访问 CICD 脚本仓库的 SSH 密钥
 
 ## 首次构建
 
@@ -102,8 +93,9 @@ git(
 2. 点击 **Build with Parameters**
 3. 选择参数：
    - **Branch**: `main`
-   - **DeployType**: `dev` 或 `test`（建议先用 dev 测试）
 4. 点击 **Build**
+
+> 自动部署到 **Test 环境**
 
 ## 构建流程
 
@@ -111,11 +103,10 @@ git(
 
 1. **Clone Code** - 从 GitHub 克隆代码
 2. **Build & Push Image** - 构建 Docker 镜像并推送到 ACR
-3. **Deploy** - 根据 DeployType 部署到对应环境
-   - dev: 部署到开发环境
-   - test: 部署到测试环境
-   - prod: 部署到生产环境
+3. **Deploy to Test** - 自动部署到 Test 环境
 4. **Notify Success** - 通过飞书通知部署结果
+
+> 🚀 **简化版流水线**: 移除了多环境选择，专注于 Test 环境部署
 
 ## 部署后验证
 
